@@ -12,7 +12,7 @@ Plugins
 /Import/*
 !/Import/README.md
 
-carla-build
+build
 
 *.VC.db
 *.VC.opendb
