@@ -4,6 +4,7 @@ import sys
 import random
 import time
 import math
+import numpy as np
 from sensors import CollisionSensor, RGBSensor
 
 try:
@@ -103,6 +104,9 @@ class World:
 
     def get_collision_data(self):
         return self.sensors["collision"].get_collision_history()
+
+    def sample_action_space(self):
+        return np.random.randint(0, 3)
 
 
 if __name__ == "__main__":

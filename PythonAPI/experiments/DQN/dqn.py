@@ -97,7 +97,7 @@ class Agent:
             action
         """
         if np.random.random() < epsilon:
-            action = self.env.action_space.sample()
+            action = self.env.sample_action_space()
         else:
             state = torch.tensor([self.state])
 
