@@ -23,5 +23,27 @@ class DQN(nn.Module):
         return self.net(x.float())
 
 
+class Agent:
+    """
+    Base Agent class handeling the interaction with the environment
+    Args:
+        env: training environment
+        replay_buffer: replay buffer storing experiences
+    """
+
+    def __init__(self):
+        pass
+
+    def reset(self):
+        pass
+
+    def get_action(self, net, epsilon, device):
+        pass
+
+    @torch.no_grad()
+    def play_step(self, net, epsilon, device):
+        pass
+
+
 if __name__ == "__main__":
     dqn = DQN()
