@@ -79,8 +79,8 @@ class Agent:
     def __init__(self, env: World, replay_buffer: ReplayBuffer) -> None:
         self.env = env
         self.replay_buffer = replay_buffer
-        self.reset()
-        self.state = self.env.reset()
+        # self.reset()
+        # self.state = self.env.reset()
 
     def reset(self):
         self.state = self.env.reset()
@@ -113,7 +113,3 @@ class Agent:
     @torch.no_grad()
     def play_step(self, net, epsilon, device):
         pass
-
-
-if __name__ == "__main__":
-    dqn = DQN()

@@ -107,10 +107,3 @@ class World:
 
     def sample_action_space(self):
         return np.random.randint(0, 3)
-
-
-if __name__ == "__main__":
-    world = World()
-
-    world.step(0)
-    world.destroy_all()
