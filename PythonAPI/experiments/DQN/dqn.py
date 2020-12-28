@@ -83,10 +83,32 @@ class Agent:
         self.state = self.env.reset()
 
     def reset(self):
-        pass
+        self.state = self.env.reset()
 
-    def get_action(self, net, epsilon, device):
-        pass
+    def get_action(self, net: nn.Module, epsilon: float, device: str) -> int:
+        """
+        Using the given network, decide what action to carry out
+        using an epsilon-greedy policy
+        Args:
+            net: DQN network
+            epsilon: value to determine likelihood of taking a random action
+            device: current device
+        Returns:
+            action
+        """
+        if np.random.random() < epsilon:
+            action = self.env.action_space.sample()
+        else:
+            state = torch.tensor([self.state])
+
+            if device not in ["cpu"]:
+                state = state.cuda(device)
+
+            q_values = net(state)
+            _, action = torch.max(q_values, dim=1)
+            action = int(action.item())
+
+        return action
 
     @torch.no_grad()
     def play_step(self, net, epsilon, device):
