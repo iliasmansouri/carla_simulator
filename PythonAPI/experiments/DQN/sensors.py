@@ -80,7 +80,7 @@ class RGBSensor:
         self.sensor = world.spawn_actor(bp, carla.Transform(), attach_to=self._parent)
 
         weak_self = weakref.ref(self)
-        self.sensor.listen(lambda data: self.process_img(data))
+        self.sensor.listen(lambda data: self._on_image(data))
 
     def process_img(self, image):
         i = np.array(image.raw_data, dtype=np.dtype("uint8"))
@@ -88,6 +88,12 @@ class RGBSensor:
         b_channel, g_channel, r_channel, _ = cv2.split(img_bgra)
         img = cv2.merge((b_channel, g_channel, r_channel))
         return img
+
+    def _on_image(self, image):
+        self.history = self.process_img(image)
+
+    def get_image_data(self):
+        return self.history
 
     def destroy(self):
         self.sensor.stop()

@@ -82,6 +82,7 @@ class World:
         kmh = int(3.6 * math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2))
 
         collision_data = self.get_collision_data()
+        image_data = self.get_image_data()
 
         if len(collision_data) != 0:
             done = True
@@ -96,6 +97,8 @@ class World:
         if self.episode_start + 10 < time.time():
             done = True
 
+        return image_data, reward, done, None
+
     def reset(self):
         self.actor_list = []
 
@@ -104,6 +107,9 @@ class World:
 
     def get_collision_data(self):
         return self.sensors["collision"].get_collision_history()
+
+    def get_image_data(self):
+        return self.sensors["rgb"].get_image_data()
 
     def sample_action_space(self):
         return np.random.randint(0, 3)
