@@ -112,4 +112,26 @@ class Agent:
 
     @torch.no_grad()
     def play_step(self, net, epsilon, device):
-        pass
+        """
+        Carries out a single interaction step between the agent and the environment
+        Args:
+            net: DQN network
+            epsilon: value to determine likelihood of taking a random action
+            device: current device
+        Returns:
+            reward, done
+        """
+
+        action = self.get_action(net, epsilon, device)
+
+        # do step in the environment
+        new_state, reward, done, _ = self.env.step(action)
+
+        exp = Experience(self.state, action, reward, done, new_state)
+
+        self.replay_buffer.append(exp)
+
+        self.state = new_state
+        if done:
+            self.reset()
+        return reward, done
