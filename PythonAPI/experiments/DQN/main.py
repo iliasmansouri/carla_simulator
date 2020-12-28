@@ -1,5 +1,5 @@
+from dqn import DQN, Agent, ReplayBuffer
 from world import World
-from dqn import ReplayBuffer, DQN, Agent
 
 
 def test_world():

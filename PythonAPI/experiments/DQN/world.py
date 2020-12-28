@@ -1,10 +1,12 @@
 import glob
-import os
-import sys
-import random
-import time
 import math
+import os
+import random
+import sys
+import time
+
 import numpy as np
+
 from sensors import CollisionSensor, RGBSensor
 
 try:

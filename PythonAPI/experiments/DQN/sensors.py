@@ -1,11 +1,12 @@
+import collections
 import glob
+import math
 import os
 import sys
-import collections
 import weakref
-import math
-import numpy as np
+
 import cv2
+import numpy as np
 from PIL import Image
 
 try:
