@@ -135,3 +135,24 @@ class Agent:
         if done:
             self.reset()
         return reward, done
+
+
+class DQNLightning(pl.LightningModule):
+    def __init__(self) -> None:
+        super().__init__()
+        pass
+
+    def forward(self, *args, **kwargs):
+        return super().forward(*args, **kwargs)
+
+    def training_step(self, *args, **kwargs):
+        return super().training_step(*args, **kwargs)
+
+    def configure_optimizers(self):
+        return super().configure_optimizers()
+
+    def train_dataloader(self) -> DataLoader:
+        return super().train_dataloader()
+
+    def mse_loss(self):
+        pass
