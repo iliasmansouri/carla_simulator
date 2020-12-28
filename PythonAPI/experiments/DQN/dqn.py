@@ -72,8 +72,11 @@ class Agent:
         replay_buffer: replay buffer storing experiences
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, env: World, replay_buffer: ReplayBuffer) -> None:
+        self.env = env
+        self.replay_buffer = replay_buffer
+        self.reset()
+        self.state = self.env.reset()
 
     def reset(self):
         pass
