@@ -1,4 +1,4 @@
-from dqn import DQN, Agent, ReplayBuffer
+from dqn import DQN, Agent, ReplayBuffer, DQNLightning
 from world import World
 
 

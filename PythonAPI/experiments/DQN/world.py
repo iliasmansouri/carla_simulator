@@ -27,7 +27,7 @@ import carla
 
 
 class World:
-    def __init__(self):
+    def __init__(self, sensors_lst=["rgb"], img_size_x=640, img_size_y=480):
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(2.0)
 
@@ -40,13 +40,23 @@ class World:
         self.vehicle = None
         self.spawn_vehicle()
 
-        self.sensors = self.get_sensors(["rgb", "collision"])
+        self.img_size_x = img_size_x
+        self.img_size_y = img_size_y
+        self.sensors = self.get_sensors(sensors_lst)
+
         self.episode_start = 0
+        self.action_space = [0, 1, 2]
 
     def destroy_all(self):
         for actor in self.actor_list:
             print("Destroying: ", type(actor))
             actor.destroy()
+
+    def get_action_space(self):
+        return self.action_space
+
+    def get_observation_space(self):
+        return self.img_size_x * self.img_size_y
 
     def spawn_vehicle(self):
         vehicle = self.blueprint_library.filter("model3")[0]
