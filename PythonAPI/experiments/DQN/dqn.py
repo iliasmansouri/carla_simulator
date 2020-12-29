@@ -12,6 +12,7 @@ from world import World
 import torch.optim as optim
 from torch.optim.optimizer import Optimizer
 from torch.utils.data.dataset import IterableDataset
+from einops import rearrange
 
 
 class DQN(nn.Module):
@@ -300,6 +301,9 @@ class DQNLightning(pl.LightningModule):
             loss
         """
         states, actions, rewards, dones, next_states = batch
+
+        states = rearrange(states, "b c h w -> b (c h w)")
+        next_states = rearrange(next_states, "b c h w -> b (c h w)")
 
         state_action_values = (
             self.net(states).gather(1, actions.unsqueeze(-1)).squeeze(-1)

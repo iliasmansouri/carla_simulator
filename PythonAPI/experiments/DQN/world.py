@@ -27,7 +27,9 @@ import carla
 
 
 class World:
-    def __init__(self, sensors_lst=["rgb"], img_size_x=640, img_size_y=480):
+    def __init__(
+        self, sensors_lst=["rgb"], img_size_x=640, img_size_y=480, img_channels=3
+    ):
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(2.0)
 
@@ -41,6 +43,7 @@ class World:
 
         self.img_size_x = img_size_x
         self.img_size_y = img_size_y
+        self.img_channels = img_channels
         self.sensors_lst = sensors_lst
         self.sensors = None
 
@@ -58,7 +61,7 @@ class World:
         return self.action_space
 
     def get_observation_space(self):
-        return self.img_size_x * self.img_size_y
+        return self.img_size_x * self.img_size_y * self.img_channels
 
     def spawn_actors(self):
         self.spawn_vehicle()
