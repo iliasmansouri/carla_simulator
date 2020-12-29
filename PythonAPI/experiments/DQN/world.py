@@ -43,7 +43,8 @@ class World:
 
         self.img_size_x = img_size_x
         self.img_size_y = img_size_y
-        self.sensors = self.get_sensors(sensors_lst)
+        self.sensors_lst = sensors_lst
+        self.sensors = self.get_sensors(self.sensors_lst)
 
         self.episode_start = 0
         self.action_space = [0, 1, 2]
@@ -118,9 +119,16 @@ class World:
 
     def reset(self):
         self.actor_list = []
+        self.spawn_vehicle()
+        self.sensors = self.get_sensors(self.sensors_lst)
+
+        while self.get_image_data() is None:
+            time.sleep(0.01)
 
         self.episode_start = time.time()
         self.vehicle.apply_control(carla.VehicleControl(brake=0.0, throttle=0.0))
+
+        return self.get_image_data()
 
     def get_collision_data(self):
         return self.sensors["collision"].get_collision_history()
