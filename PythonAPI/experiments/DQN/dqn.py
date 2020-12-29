@@ -254,3 +254,26 @@ class DQNLightning(pl.LightningModule):
 
     def train_dataloader(self) -> DataLoader:
         return self.__dataloader()
+
+    def loss_function(self, batch: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
+        """
+        Calculates the mse loss using a mini batch from the replay buffer
+        Args:
+            batch: current mini batch of replay data
+        Returns:
+            loss
+        """
+        states, actions, rewards, dones, next_states = batch
+
+        state_action_values = (
+            self.net(states).gather(1, actions.unsqueeze(-1)).squeeze(-1)
+        )
+
+        with torch.no_grad():
+            next_state_values = self.target_net(next_states).max(1)[0]
+            next_state_values[dones] = 0.0
+            next_state_values = next_state_values.detach()
+
+        expected_state_action_values = next_state_values * self.gamma + rewards
+
+        return nn.MSELoss()(state_action_values, expected_state_action_values)
