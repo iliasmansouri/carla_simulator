@@ -241,8 +241,16 @@ class DQNLightning(pl.LightningModule):
         optimizer = optim.Adam(self.net.parameters(), lr=self.lr)
         return [optimizer]
 
-    def train_dataloader(self) -> DataLoader:
-        return super().train_dataloader()
+    def __dataloader(self) -> DataLoader:
+        """Initialize the Replay Buffer dataset used for retrieving experiences"""
+        dataset = RLDataset(self.buffer, self.episode_length)
 
-    def mse_loss(self):
-        pass
+        dataloader = DataLoader(
+            dataset=dataset,
+            batch_size=self.batch_size,
+            sampler=None,
+        )
+        return dataloader
+
+    def train_dataloader(self) -> DataLoader:
+        return self.__dataloader()
