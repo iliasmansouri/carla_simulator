@@ -28,7 +28,7 @@ import carla
 
 class World:
     def __init__(
-        self, sensors_lst=["rgb"], img_size_x=640, img_size_y=480, img_channels=3
+        self, sensors_lst=["rgb"], img_size_x=320, img_size_y=240, img_channels=3
     ):
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(2.0)
@@ -81,7 +81,9 @@ class World:
 
         sensors = {}
         for s in sensors_lst:
-            sensor = accessor.get(s, "Invalid sensor")(self.vehicle)
+            sensor = accessor.get(s, "Invalid sensor")(
+                self.vehicle, self.img_size_x, self.img_size_y
+            )
             if sensor:
                 sensors[s] = sensor
                 self.actor_list.append(sensor)
