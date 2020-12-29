@@ -34,17 +34,15 @@ class World:
         self.world = self.client.get_world()
 
         self.blueprint_library = self.world.get_blueprint_library()
-        self.spawn_point = random.choice(self.world.get_map().get_spawn_points())
 
         self.actor_list = []
         self.vehicle = None
         self.spawn_point = None
-        self.spawn_vehicle()
 
         self.img_size_x = img_size_x
         self.img_size_y = img_size_y
         self.sensors_lst = sensors_lst
-        self.sensors = self.get_sensors(self.sensors_lst)
+        self.sensors = None
 
         self.episode_start = 0
         self.action_space = [0, 1, 2]
@@ -54,7 +52,6 @@ class World:
 
     def destroy_all(self):
         for actor in self.actor_list:
-            print("Destroying: ", type(actor))
             actor.destroy()
 
     def get_action_space(self):
@@ -62,6 +59,10 @@ class World:
 
     def get_observation_space(self):
         return self.img_size_x * self.img_size_y
+
+    def spawn_actors(self):
+        self.spawn_vehicle()
+        self.sensors = self.get_sensors(self.sensors_lst)
 
     def spawn_vehicle(self):
         vehicle = self.blueprint_library.filter("model3")[0]
@@ -118,9 +119,9 @@ class World:
         return image_data, reward, done, None
 
     def reset(self):
+        self.destroy_all()
         self.actor_list = []
-        self.spawn_vehicle()
-        self.sensors = self.get_sensors(self.sensors_lst)
+        self.spawn_actors()
 
         while self.get_image_data() is None:
             time.sleep(0.01)
