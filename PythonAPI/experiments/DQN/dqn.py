@@ -234,8 +234,44 @@ class DQNLightning(pl.LightningModule):
         output = self.net(x)
         return output
 
-    def training_step(self, *args, **kwargs):
-        return super().training_step(*args, **kwargs)
+    def training_step(
+        self, batch: Tuple[torch.Tensor, torch.Tensor], nb_batch
+    ) -> OrderedDict:
+        """
+        Carries out a single step through the environment to update the replay buffer.
+        Then calculates loss based on the minibatch received
+        Args:
+            batch: current mini batch of replay data
+            nb_batch: batch number
+        Returns:
+            Training loss and log metrics
+        """
+        device = self.get_device(batch)
+        epsilon = max(
+            self.eps_end, self.eps_start - self.global_step + 1 / self.eps_last_frame
+        )
+
+        # step through environment with agent
+        reward, done = self.agent.play_step(self.net, epsilon, device)
+        self.episode_reward += reward
+
+        loss = self.loss_function(batch)
+
+        if done:
+            self.total_reward = self.episode_reward
+            self.episode_reward = 0
+
+        # Soft update of target network
+        if self.global_step % self.sync_rate == 0:
+            self.target_net.load_state_dict(self.net.state_dict())
+
+        log = {
+            "total_reward": torch.tensor(self.total_reward).to(device),
+            "reward": torch.tensor(reward).to(device),
+            "steps": torch.tensor(self.global_step).to(device),
+        }
+
+        return OrderedDict({"loss": loss, "log": log, "progress_bar": log})
 
     def configure_optimizers(self) -> List[Optimizer]:
         optimizer = optim.Adam(self.net.parameters(), lr=self.lr)
