@@ -1,5 +1,5 @@
 from collections import OrderedDict, deque, namedtuple
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 import pytorch_lightning as pl
@@ -9,6 +9,8 @@ from torch.utils.data import DataLoader
 from tqdm import trange
 
 from world import World
+import torch.optim as optim
+from torch.optim.optimizer import Optimizer
 
 
 class DQN(nn.Module):
@@ -208,8 +210,9 @@ class DQNLightning(pl.LightningModule):
     def training_step(self, *args, **kwargs):
         return super().training_step(*args, **kwargs)
 
-    def configure_optimizers(self):
-        return super().configure_optimizers()
+    def configure_optimizers(self) -> List[Optimizer]:
+        optimizer = optim.Adam(self.net.parameters(), lr=self.lr)
+        return [optimizer]
 
     def train_dataloader(self) -> DataLoader:
         return super().train_dataloader()
