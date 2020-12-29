@@ -220,6 +220,9 @@ class DQNLightning(pl.LightningModule):
         for i in trange(steps):
             self.agent.play_step(self.net, epsilon=1.0)
 
+    def get_device(self, batch) -> str:
+        return batch[0].device.index if self.on_gpu else "cpu"
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Passes in a state `x` through the network and gets the `q_values` of each action as an output
