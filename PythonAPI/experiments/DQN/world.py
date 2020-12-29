@@ -38,6 +38,7 @@ class World:
 
         self.actor_list = []
         self.vehicle = None
+        self.spawn_point = None
         self.spawn_vehicle()
 
         self.img_size_x = img_size_x
@@ -63,6 +64,7 @@ class World:
 
     def spawn_vehicle(self):
         vehicle = self.blueprint_library.filter("model3")[0]
+        self.spawn_point = random.choice(self.world.get_map().get_spawn_points())
         self.vehicle = self.world.spawn_actor(vehicle, self.spawn_point)
         self.actor_list.append(self.vehicle)
 
