@@ -194,8 +194,16 @@ class DQNLightning(pl.LightningModule):
         for i in trange(steps):
             self.agent.play_step(self.net, epsilon=1.0)
 
-    def forward(self, *args, **kwargs):
-        return super().forward(*args, **kwargs)
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Passes in a state `x` through the network and gets the `q_values` of each action as an output
+        Args:
+            x: environment state
+        Returns:
+            q values
+        """
+        output = self.net(x)
+        return output
 
     def training_step(self, *args, **kwargs):
         return super().training_step(*args, **kwargs)
