@@ -11,6 +11,7 @@ from tqdm import trange
 from world import World
 import torch.optim as optim
 from torch.optim.optimizer import Optimizer
+from torch.utils.data.dataset import IterableDataset
 
 
 class DQN(nn.Module):
@@ -73,6 +74,29 @@ class ReplayBuffer:
             np.array(dones, dtype=np.bool),
             np.array(next_states),
         )
+
+
+class RLDataset(IterableDataset):
+    """
+    Iterable Dataset containing the ExperienceBuffer
+    which will be updated with new experiences during training
+    """
+
+    def __init__(self, buffer: ReplayBuffer, sample_size: int = 200) -> None:
+        """
+        Args:
+            buffer: replay buffer
+            sample_size: number of experiences to sample at a time
+        """
+        self.buffer = buffer
+        self.sample_size = sample_size
+
+    def __iter__(self) -> Tuple:
+        states, actions, rewards, dones, new_states = self.buffer.sample(
+            self.sample_size
+        )
+        for i in range(len(dones)):
+            yield states[i], actions[i], rewards[i], dones[i], new_states[i]
 
 
 class Agent:
