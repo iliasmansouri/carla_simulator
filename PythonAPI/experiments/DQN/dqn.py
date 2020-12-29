@@ -142,9 +142,43 @@ class Agent:
 
 
 class DQNLightning(pl.LightningModule):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        env: World,
+        replay_size: int = 200,
+        warm_start_steps: int = 200,
+        gamma: float = 0.99,
+        eps_start: float = 1.0,
+        eps_end: float = 0.01,
+        eps_last_frame: int = 200,
+        sync_rate: int = 10,
+        lr: float = 1e-2,
+        episode_length: int = 50,
+        batch_size: int = 4,
+    ) -> None:
         super().__init__()
-        pass
+        self.env = env
+        self.replay_size = replay_size
+        self.warm_start_steps = warm_start_steps
+        self.gamma = gamma
+        self.eps_start = eps_start
+        self.eps_end = eps_end
+        self.eps_last_frame = eps_last_frame
+        self.sync_rate = sync_rate
+        self.lr = lr
+        self.episode_length = episode_length
+        self.batch_size = batch_size
+
+        obs_size = self.env.get_observation_space()
+        n_actions = len(self.env.get_action_space())
+
+        self.net = DQN(obs_size, n_actions)
+        self.target_net = DQN(obs_size, n_actions)
+
+        self.buffer = ReplayBuffer(self.replay_size)
+        self.agent = Agent(self.env, self.buffer)
+        self.total_reward = 0
+        self.episode_reward = 0
 
     def forward(self, *args, **kwargs):
         return super().forward(*args, **kwargs)
