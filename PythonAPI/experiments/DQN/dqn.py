@@ -83,8 +83,8 @@ class Agent:
     def __init__(self, env: World, replay_buffer: ReplayBuffer) -> None:
         self.env = env
         self.replay_buffer = replay_buffer
-        # self.reset()
-        # self.state = self.env.reset()
+        self.reset()
+        self.state = self.env.reset()
 
     def reset(self):
         self.state = self.env.reset()
@@ -115,7 +115,7 @@ class Agent:
         return action
 
     @torch.no_grad()
-    def play_step(self, net, epsilon, device):
+    def play_step(self, net: nn.Module, epsilon: float = 0.0, device: str = "gpu"):
         """
         Carries out a single interaction step between the agent and the environment
         Args:
@@ -179,6 +179,19 @@ class DQNLightning(pl.LightningModule):
         self.agent = Agent(self.env, self.buffer)
         self.total_reward = 0
         self.episode_reward = 0
+
+        self.populate_buffer()
+
+    def populate_buffer(self, steps: int = 1000) -> None:
+        """
+        Carries out several random steps through the environment to initially fill
+        up the replay buffer with experiences
+        Args:
+            steps: number of random steps to populate the buffer with
+        """
+        print("Populating ReplayBuffer...")
+        for i in trange(steps):
+            self.agent.play_step(self.net, epsilon=1.0)
 
     def forward(self, *args, **kwargs):
         return super().forward(*args, **kwargs)

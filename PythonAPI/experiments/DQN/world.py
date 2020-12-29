@@ -47,6 +47,9 @@ class World:
         self.episode_start = 0
         self.action_space = [0, 1, 2]
 
+        self.throttle = 1
+        self.steer_amount = 1
+
     def destroy_all(self):
         for actor in self.actor_list:
             print("Destroying: ", type(actor))
@@ -83,20 +86,20 @@ class World:
             self.vehicle.apply_control(carla.VehicleControl(throttle=1.0, steer=0))
         if action == 1:
             self.vehicle.apply_control(
-                carla.VehicleControl(throttle=1.0, steer=-1 * self.STEER_AMT)
+                carla.VehicleControl(throttle=1.0, steer=-1 * self.steer_amount)
             )
         if action == 2:
             self.vehicle.apply_control(
-                carla.VehicleControl(throttle=1.0, steer=1 * self.STEER_AMT)
+                carla.VehicleControl(throttle=1.0, steer=1 * self.steer_amount)
             )
 
         v = self.vehicle.get_velocity()
         kmh = int(3.6 * math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2))
 
-        collision_data = self.get_collision_data()
+        # collision_data = self.get_collision_data()
         image_data = self.get_image_data()
 
-        if len(collision_data) != 0:
+        if len(image_data) != 0:
             done = True
             reward = -200
         elif kmh < 50:
