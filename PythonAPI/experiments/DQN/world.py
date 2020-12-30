@@ -73,17 +73,21 @@ class World:
         self.vehicle = self.world.spawn_actor(vehicle, self.spawn_point)
         self.actor_list.append(self.vehicle)
 
+    def init_rbg_sensor(self):
+        return RGBSensor(self.vehicle, self.img_size_x, self.img_size_y)
+
+    def init_collision_sensor(self):
+        return CollisionSensor(self.vehicle)
+
     def get_sensors(self, sensors_lst):
         accessor = {
-            "collision": CollisionSensor,
-            "rgb": RGBSensor,
+            "collision": self.init_collision_sensor,
+            "rgb": self.init_rbg_sensor,
         }
 
         sensors = {}
         for s in sensors_lst:
-            sensor = accessor.get(s, "Invalid sensor")(
-                self.vehicle, self.img_size_x, self.img_size_y
-            )
+            sensor = accessor.get(s, "Invalid sensor")()
             if sensor:
                 sensors[s] = sensor
                 self.actor_list.append(sensor)
