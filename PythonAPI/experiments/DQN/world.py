@@ -28,7 +28,11 @@ import carla
 
 class World:
     def __init__(
-        self, sensors_lst=["rgb"], img_size_x=320, img_size_y=240, img_channels=3
+        self,
+        sensors_lst=["rgb", "collision"],
+        img_size_x=320,
+        img_size_y=240,
+        img_channels=3,
     ):
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(2.0)
