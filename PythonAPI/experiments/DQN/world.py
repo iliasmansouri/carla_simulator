@@ -33,6 +33,7 @@ class World:
         img_size_x=320,
         img_size_y=240,
         img_channels=3,
+        episode_length=50,
     ):
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(2.0)
@@ -52,6 +53,7 @@ class World:
         self.sensors = None
 
         self.episode_start = 0
+        self.episode_length = episode_length
         self.action_space = [0, 1, 2]
 
         self.throttle = 1
@@ -126,7 +128,7 @@ class World:
             done = False
             reward = 1
 
-        if self.episode_start + 10 < time.time():
+        if self.episode_start + self.episode_length < time.time():
             done = True
 
         return image_data, reward, done, None
