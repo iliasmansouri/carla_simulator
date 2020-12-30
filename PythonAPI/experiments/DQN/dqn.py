@@ -210,7 +210,7 @@ class DQNLightning(pl.LightningModule):
 
         self.populate_buffer()
 
-    def populate_buffer(self, steps: int = 1000) -> None:
+    def populate_buffer(self, steps: int = 100) -> None:
         """
         Carries out several random steps through the environment to initially fill
         up the replay buffer with experiences
