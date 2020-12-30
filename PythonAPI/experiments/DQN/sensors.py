@@ -71,7 +71,7 @@ class CollisionSensor:
 class RGBSensor:
     def __init__(self, parent_actor, img_size_x=640, img_size_y=480, fov=110):
         self.sensor = None
-        self.history = []
+        self.img_data = None
         self._parent = parent_actor
         world = self._parent.get_world()
         bp = world.get_blueprint_library().find("sensor.camera.rgb")
@@ -91,10 +91,10 @@ class RGBSensor:
         return img
 
     def _on_image(self, image):
-        self.history = self.process_img(image)
+        self.img_data = self.process_img(image)
 
     def get_image_data(self):
-        return self.history
+        return self.img_data
 
     def destroy(self):
         self.sensor.stop()
