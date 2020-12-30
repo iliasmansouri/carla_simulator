@@ -154,3 +154,25 @@ class World:
 
     def sample_action_space(self):
         return np.random.randint(0, 3)
+
+    def get_vehicle_location(self):
+        return self.vehicle.get_transform().location
+
+    def select_destination_point(self):
+        # TODO
+        # select point as found in https://carla.readthedocs.io/en/latest/python_api/#carlalabelledpoint
+        location = self.get_vehicle_location()
+        points = list(points_in_circle(self.destination_radius, location.x, location.y))
+
+        return random.choice(points)
+
+    def draw_point(self):
+        debug = self.world.debug
+        self.spawn_vehicle()
+
+        time.sleep(0.01)
+        location = self.get_vehicle_location()
+        points = points_in_circle(25, location.x, location.y)
+
+        for p in points:
+            debug.draw_point(carla.Location(x=p[0], y=p[1], z=2.5))
