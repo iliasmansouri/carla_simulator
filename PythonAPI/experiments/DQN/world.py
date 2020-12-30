@@ -109,10 +109,10 @@ class World:
         v = self.vehicle.get_velocity()
         kmh = int(3.6 * math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2))
 
-        # collision_data = self.get_collision_data()
+        collision_data = self.get_collision_data()
         image_data = self.get_image_data()
 
-        if len(image_data) != 0:
+        if len(collision_data) != 0:
             done = True
             reward = -200
         elif kmh < 50:
