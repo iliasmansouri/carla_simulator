@@ -34,6 +34,7 @@ class World:
         img_size_y=240,
         img_channels=3,
         episode_length=50,
+        destination_radius=50,
     ):
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(2.0)
@@ -54,6 +55,8 @@ class World:
 
         self.episode_start = 0
         self.episode_length = episode_length
+
+        self.destination_radius = destination_radius
         self.action_space = [0, 1, 2]
 
         self.throttle = 1
