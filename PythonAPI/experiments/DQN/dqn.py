@@ -135,7 +135,7 @@ class Agent:
 
             if device not in ["cpu"]:
                 state = state.cuda(device)
-
+            state = rearrange(state, "b c h w -> b (c h w)")
             q_values = net(state)
             _, action = torch.max(q_values, dim=1)
             action = int(action.item())
