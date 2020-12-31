@@ -130,8 +130,12 @@ class World:
             reward = -200
         elif kmh < 50:
             done = False
-            reward = -1
-        else:
+
+        if len(collision_data) == 0:
+            distance = get_distance(self.get_vehicle_location(), self.destination)
+            if distance != 0:
+                reward = int(100 * gaussian(distance))
+            else:
             done = False
             reward = 1
 
@@ -150,6 +154,13 @@ class World:
 
         self.episode_start = time.time()
         self.vehicle.apply_control(carla.VehicleControl(brake=0.0, throttle=0.0))
+        self.destination = self.select_destination_point()
+        self.world.debug.draw_point(
+            self.destination,
+            color=carla.Color(r=77, g=255, b=0, a=255),
+            size=0.5,
+            life_time=10,
+        )
 
         return self.get_image_data()
 
@@ -170,8 +181,8 @@ class World:
         # select point as found in https://carla.readthedocs.io/en/latest/python_api/#carlalabelledpoint
         location = self.get_vehicle_location()
         points = list(points_in_circle(self.destination_radius, location.x, location.y))
-
-        return random.choice(points)
+        coords = random.choice(points)
+        return carla.Location(x=coords[0], y=coords[1], z=2.5)
 
     def draw_point(self):
         debug = self.world.debug
