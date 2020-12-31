@@ -78,7 +78,9 @@ class RGBSensor:
         bp.set_attribute("image_size_x", f"{img_size_x}")
         bp.set_attribute("image_size_y", f"{img_size_y}")
         bp.set_attribute("fov", f"{fov}")
-        self.sensor = world.spawn_actor(bp, carla.Transform(), attach_to=self._parent)
+        self.sensor = world.spawn_actor(
+            bp, carla.Transform(carla.Location(x=2.5, z=0.7)), attach_to=self._parent
+        )
 
         weak_self = weakref.ref(self)
         self.sensor.listen(lambda data: self._on_image(data))
