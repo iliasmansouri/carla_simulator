@@ -129,15 +129,17 @@ class World:
             done = True
             reward = -200
         elif kmh < 50:
-            done = False
+        done = False
 
         if len(collision_data) == 0:
             distance = get_distance(self.get_vehicle_location(), self.destination)
             if distance != 0:
                 reward = int(100 * gaussian(distance))
             else:
-            done = False
-            reward = 1
+                reward = 500
+        else:
+            done = True
+            reward = -500
 
         if self.episode_start + self.episode_length < time.time():
             done = True
