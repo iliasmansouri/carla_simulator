@@ -8,6 +8,7 @@ import time
 import numpy as np
 
 from sensors import CollisionSensor, RGBSensor
+from utils import gaussian, get_distance, points_in_circle
 
 try:
     sys.path.append(
