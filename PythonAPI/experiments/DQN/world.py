@@ -125,10 +125,6 @@ class World:
         collision_data = self.get_collision_data()
         image_data = self.get_image_data()
 
-        if len(collision_data) != 0:
-            done = True
-            reward = -200
-        elif kmh < 50:
         done = False
 
         if len(collision_data) == 0:
