@@ -57,7 +57,7 @@ class World:
         self.episode_length = episode_length
 
         self.destination_radius = destination_radius
-        self.action_space = [0, 1, 2]
+        self.action_space = [0, 1, 2, 3]
 
         self.throttle = 1
         self.steer_amount = 1
@@ -114,6 +114,10 @@ class World:
             self.vehicle.apply_control(
                 carla.VehicleControl(throttle=1.0, steer=1 * self.steer_amount)
             )
+        if action == 3:
+            self.vehicle.apply_control(
+                carla.VehicleControl(throttle=0, steer=1 * self.steer_amount)
+            )
 
         v = self.vehicle.get_velocity()
         kmh = int(3.6 * math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2))
@@ -156,7 +160,7 @@ class World:
         return self.sensors["rgb"].get_image_data()
 
     def sample_action_space(self):
-        return np.random.randint(0, 3)
+        return np.random.randint(0, 4)
 
     def get_vehicle_location(self):
         return self.vehicle.get_transform().location
